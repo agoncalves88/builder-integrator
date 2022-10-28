@@ -1,0 +1,20 @@
+TESTE: "VALOR"
+DATASOURCES:
+    -
+      NAME: "GET PEOPLE 1"
+      URL: "https://swapi.dev/api/people/%s/"
+      PROPERTIES_TO_GET:
+          -
+            VALUE_TO_GET: "name"
+            INPUT_NAME: "PEOPLE_NAME" 
+    -
+      NAME: "GET CLIENTE 1"
+      URL: "https://fe99b53f-b1c2-4ef2-969c-886622876b36.mock.pstmn.io/cliente"
+      PROPERTIES_TO_GET:
+          -
+            VALUE_TO_GET: "CLIENTE.NOME"
+            INPUT_NAME: "CLIENTE" 
+          -
+            VALUE_TO_GET: "CLIENTE.IDADE"
+            INPUT_NAME: "IDADE" 
+
