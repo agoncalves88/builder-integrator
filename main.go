@@ -3,8 +3,9 @@ package main
 import (
 	"builder-integrator/configuration"
 	"builder-integrator/service"
-	"fmt"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/tkanos/gonfig"
 )
 
@@ -15,9 +16,14 @@ func init() {
 }
 
 func main() {
-	fmt.Println(config)
+	r := gin.Default()
+	r.GET("/get-integrator/:param", func(ctx *gin.Context) {
+		param := ctx.Param("param")
+		builder := service.BuilderService{Config: config}
+		jsonBuilded := builder.GetDynamicServices(param)
 
-	builder := service.BuilderService{Config: config}
-	builder.GetDynamicServices()
+		ctx.JSON(http.StatusOK, jsonBuilded)
+	})
 
+	r.Run(":5555")
 }

@@ -14,7 +14,7 @@ type BuilderService struct {
 	Config configuration.Config
 }
 
-func (service BuilderService) GetDynamicServices() {
+func (service BuilderService) GetDynamicServices(param string) map[string]interface{} {
 	inputToBuild := map[string]interface{}{
 		"CORRELATION": "",
 	}
@@ -23,7 +23,7 @@ func (service BuilderService) GetDynamicServices() {
 		var ret *http.Response
 		var err error
 		if datasource.HAS_PARAM {
-			ret, err = http.Get(fmt.Sprintf(datasource.URL, "1"))
+			ret, err = http.Get(fmt.Sprintf(datasource.URL, param))
 			checkApiErr(err)
 		} else {
 			ret, err = http.Get(datasource.URL)
@@ -42,8 +42,10 @@ func (service BuilderService) GetDynamicServices() {
 
 	}
 
-	jsonBuilded, _ := json.Marshal(inputToBuild)
-	fmt.Println(string(jsonBuilded))
+	// jsonBuilded, _ := json.Marshal(inputToBuild)
+	// fmt.Println(string(jsonBuilded))
+
+	return inputToBuild
 }
 func checkApiErr(err error) {
 	if err != nil {
