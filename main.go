@@ -15,6 +15,7 @@ type Configuration struct {
 	DATASOURCES []struct {
 		NAME              string
 		URL               string
+		HAS_PARAM         bool
 		PROPERTIES_TO_GET []struct {
 			VALUE_TO_GET string
 			INPUT_NAME   string
@@ -36,9 +37,16 @@ func main() {
 	}
 
 	for _, datasource := range config.DATASOURCES {
+		var ret *http.Response
+		var err error
+		if datasource.HAS_PARAM {
+			ret, err = http.Get(fmt.Sprintf(datasource.URL, "1"))
+			CheckApiErr(err)
+		} else {
+			ret, err = http.Get(datasource.URL)
+			CheckApiErr(err)
+		}
 
-		ret, err := http.Get(fmt.Sprintf(datasource.URL, "1"))
-		CheckApiErr(err)
 		body, _ := ioutil.ReadAll(ret.Body)
 		fmt.Println(string(body))
 

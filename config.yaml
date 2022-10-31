@@ -3,12 +3,14 @@ DATASOURCES:
     -
       NAME: "GET PEOPLE 1"
       URL: "https://swapi.dev/api/people/%s/"
+      HAS_PARAM: true
       PROPERTIES_TO_GET:
           -
             VALUE_TO_GET: "name"
             INPUT_NAME: "PEOPLE_NAME" 
     -
       NAME: "GET CLIENTE 1"
+      HAS_PARAM: false
       URL: "https://fe99b53f-b1c2-4ef2-969c-886622876b36.mock.pstmn.io/cliente"
       PROPERTIES_TO_GET:
           -
