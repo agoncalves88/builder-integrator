@@ -2,11 +2,11 @@ package main
 
 import (
 	"builder-integrator/configuration"
-	"builder-integrator/service"
-	"net/http"
+	"builder-integrator/controllers"
+	"builder-integrator/docs"
 
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
+	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/tkanos/gonfig"
 )
@@ -19,23 +19,13 @@ func init() {
 
 func main() {
 
-	configuration.SetSwaggerInfo()
-	r := gin.Default()
-
-	v1 := r.Group("/api/v1")
+	router := gin.Default()
+	docs.SwaggerInfo.BasePath = ""
+	// Simple group: v1
+	v1 := router.Group("/api/v1")
 	{
-		v1.GET("/get-integrator/:param", func(ctx *gin.Context) {
-			param := ctx.Param("param")
-			builder := service.BuilderService{Config: config}
-			jsonBuilded := builder.GetDynamicServices(param)
-
-			ctx.JSON(http.StatusOK, jsonBuilded)
-		})
+		v1.GET("get-integrator/:param", controllers.BuilderController{Config: config}.GetBuilderIntegration)
 	}
-
-	// url := ginSwagger.URL("/swagger/doc.json") // The url pointing to API definition
-
-	url := ginSwagger.URL("http://localhost:5555/swagger/doc.json") // The url pointing to API definition
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
-	r.Run(":5555")
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	router.Run(":5555")
 }

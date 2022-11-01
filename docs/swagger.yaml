@@ -1,4 +1,25 @@
 info:
   contact: {}
-paths: {}
+paths:
+  /api/v1/get-integrator/{param}:
+    get:
+      consumes:
+      - application/json
+      description: dynamic builder integration
+      parameters:
+      - description: '{Param}'
+        in: path
+        name: param
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: builder
+      tags:
+      - builder
 swagger: "2.0"
