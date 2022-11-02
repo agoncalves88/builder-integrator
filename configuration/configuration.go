@@ -7,6 +7,7 @@ type Config struct {
 
 type DataSource struct {
 	NAME              string
+	GROUP             string
 	URL               string
 	HAS_PARAM         bool
 	PROPERTIES_TO_GET []struct {

@@ -23,11 +23,12 @@ type BuilderController struct {
 // @Produce json
 // @Param param  path string true "{Param}"
 // @Success 200 {string} Helloworld
-// @Router /api/v1/get-integrator/{param} [get]
+// @Router /api/v1/get-integrator/group/{group}/{param} [get]
 func (config BuilderController) GetBuilderIntegration(c *gin.Context) {
 
 	service := service.BuilderService{Config: config.Config}
 	param := c.Param("param")
-	builder := service.GetDynamicServices(param)
+	group := c.Param("group")
+	builder := service.GetDynamicServices(param, group)
 	c.JSON(http.StatusOK, builder)
 }

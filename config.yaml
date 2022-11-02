@@ -2,6 +2,7 @@ TESTE: "VALOR"
 DATASOURCES:
     -
       NAME: "GET PEOPLE 1"
+      GROUP: "PF"
       URL: "https://swapi.dev/api/people/%s/"
       HAS_PARAM: true
       PROPERTIES_TO_GET:
@@ -10,6 +11,7 @@ DATASOURCES:
             INPUT_NAME: "PEOPLE_NAME" 
     -
       NAME: "GET CLIENTE 1"
+      GROUP: "PF"
       HAS_PARAM: false
       URL: "https://fe99b53f-b1c2-4ef2-969c-886622876b36.mock.pstmn.io/cliente"
       PROPERTIES_TO_GET:
@@ -19,4 +21,17 @@ DATASOURCES:
           -
             VALUE_TO_GET: "CLIENTE.IDADE"
             INPUT_NAME: "IDADE" 
+    -
+      NAME: "GET CDCT"
+      GROUP: "PJ"
+      HAS_PARAM: false
+      URL: "https://30990eec-a5c7-4fe6-a699-25405db585d4.mock.pstmn.io/cdct"
+      PROPERTIES_TO_GET:
+          -
+            VALUE_TO_GET: "content.#(productId==3).productId"
+            INPUT_NAME: "PRODUCT_CDCT" 
+          -
+            VALUE_TO_GET: "content.#(productId==10).productId"
+            INPUT_NAME: "PRODUCT_CDCT" 
+
 

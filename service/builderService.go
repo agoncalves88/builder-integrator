@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/tidwall/gjson"
@@ -14,16 +15,26 @@ type BuilderService struct {
 	Config configuration.Config
 }
 
-func (service BuilderService) GetDynamicServices(param string) map[string]interface{} {
+func (service BuilderService) GetDynamicServices(param string, group string) map[string]interface{} {
 	var waitGroup sync.WaitGroup
 
-	waitGroup.Add(len(service.Config.DATASOURCES))
 	inputToBuild := map[string]interface{}{
 		"CORRELATION": "",
 	}
+	totalDataForGroups := 0
+	for _, datasource := range service.Config.DATASOURCES {
+		if strings.EqualFold(datasource.GROUP, group) {
+			totalDataForGroups++
+		}
+	}
+	waitGroup.Add(totalDataForGroups)
 
 	for _, datasource := range service.Config.DATASOURCES {
-		go getService(datasource, param, &waitGroup, &inputToBuild)
+		if strings.EqualFold(datasource.GROUP, group) {
+
+			go getService(datasource, param, &waitGroup, &inputToBuild)
+		}
+
 	}
 
 	waitGroup.Wait()
@@ -44,7 +55,15 @@ func getService(datasource configuration.DataSource, param string, group *sync.W
 	body, _ := ioutil.ReadAll(ret.Body)
 	toBuilded := *inputBuilded
 	for _, prop := range datasource.PROPERTIES_TO_GET {
-		toBuilded[prop.INPUT_NAME] = gjson.Get(string(body), prop.VALUE_TO_GET).String()
+		value := gjson.Get(string(body), prop.VALUE_TO_GET).String()
+		if value == "" {
+			if toBuilded[prop.INPUT_NAME] == nil {
+				toBuilded[prop.INPUT_NAME] = ""
+			}
+		} else {
+			toBuilded[prop.INPUT_NAME] = value
+		}
+
 	}
 	*inputBuilded = toBuilded
 

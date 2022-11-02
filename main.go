@@ -24,7 +24,7 @@ func main() {
 	// Simple group: v1
 	v1 := router.Group("/api/v1")
 	{
-		v1.GET("get-integrator/:param", controllers.BuilderController{Config: config}.GetBuilderIntegration)
+		v1.GET("get-integrator/group/:group/:param", controllers.BuilderController{Config: config}.GetBuilderIntegration)
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	router.Run(":5555")
