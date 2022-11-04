@@ -4,6 +4,7 @@ import (
 	"builder-integrator/configuration"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -17,7 +18,6 @@ type BuilderService struct {
 
 func (service BuilderService) GetDynamicServices(param string, group string) map[string]interface{} {
 	var waitGroup sync.WaitGroup
-
 	inputToBuild := map[string]interface{}{
 		"CORRELATION": "",
 	}
@@ -42,6 +42,12 @@ func (service BuilderService) GetDynamicServices(param string, group string) map
 }
 
 func getService(datasource configuration.DataSource, param string, group *sync.WaitGroup, inputBuilded *map[string]interface{}) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("Panic recover -> ", r)
+			group.Done()
+		}
+	}()
 	var ret *http.Response
 	var err error
 	if datasource.HAS_PARAM {
